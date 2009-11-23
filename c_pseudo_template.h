@@ -33,8 +33,12 @@
  * knowledge of the CeCILL-C license and that you accept its terms.
  *
  *-----------------------------------------------------------------------------
- * $Id$
- * $Log$
+ *
+ * $Id: c_pseudo_template.h,v 1.1 2009/11/15 07:39:54 eric Exp eric $
+ * $Log: c_pseudo_template.h,v $
+ * Revision 1.1  2009/11/15 07:39:54  eric
+ * Initial revision
+ *
  *-----------------------------------------------------------------------------
  */
 
@@ -88,11 +92,13 @@
  * uint32_t         6         u32        UINT32       CPT_UINT32
  * int64_t          7         i64        INT64        CPT_INT64
  * uint64_t         8         u64        UINT64       CPT_UINT64
- * float            9         s          FLOAT        CPT_FLOAT
+ * float            9         f          FLOAT        CPT_FLOAT
  * double          10         d          DOUBLE       CPT_DOUBLE
  * cpt_scomplex_t  11         c          SCOMPLEX     CPT_SCOMPLEX
  * cpt_dcomplex_t  12         z          DCOMPLEX     CPT_DCOMPLEX
- * pointer         13         p          POINTER      CPT_POINTER
+ * cpt_rgb_t       13         rgb        RGB          CPT_RGB
+ * cpt_rgba_t      14         rgba       RGBA         CPT_RGBA
+ * pointer         15         p          POINTER      CPT_POINTER
  * @endcode
  *
  * In addition, and based on file @c <limits.h>, basic C integer types
@@ -153,6 +159,8 @@
 
 typedef struct { float re, im; } cpt_scomplex_t;
 typedef struct { double re, im; } cpt_dcomplex_t;
+typedef struct { uint8_t r, g, b; } cpt_rgb_t;
+typedef struct { uint8_t r, g, b, a; } cpt_rgba_t;
 
 /*---------------------------------------------------------------------------*/
 
@@ -190,6 +198,8 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_TYPE_CPT_DOUBLE   CPT_DOUBLE
 # define _CPT_TYPE_CPT_SCOMPLEX CPT_SCOMPLEX
 # define _CPT_TYPE_CPT_DCOMPLEX CPT_DCOMPLEX
+# define _CPT_TYPE_CPT_RGB      CPT_RGB
+# define _CPT_TYPE_CPT_RGBA     CPT_RGBA
 # define _CPT_TYPE_CPT_POINTER  CPT_POINTER
 #endif /* DOXYGEN */
 
@@ -239,8 +249,14 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 /** @brief Double precision complex. */
 #define CPT_DCOMPLEX 12
 
+/** @brief Red, green, and blue triplet. */
+#define CPT_RGB      13
+
+/** @brief Red, green, blue and alpha quadruplet. */
+#define CPT_RGBA     14
+
 /** @brief Pointer. */
-#define CPT_POINTER  13
+#define CPT_POINTER  15
 
 /*@}*/
 
@@ -263,10 +279,12 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_ABBREV_CPT_UINT32    u32
 # define _CPT_ABBREV_CPT_INT64     i64
 # define _CPT_ABBREV_CPT_UINT64    u64
-# define _CPT_ABBREV_CPT_FLOAT     s
+# define _CPT_ABBREV_CPT_FLOAT     f
 # define _CPT_ABBREV_CPT_DOUBLE    d
 # define _CPT_ABBREV_CPT_SCOMPLEX  c
 # define _CPT_ABBREV_CPT_DCOMPLEX  z
+# define _CPT_ABBREV_CPT_RGB       rgb
+# define _CPT_ABBREV_CPT_RGBA      rgba
 # define _CPT_ABBREV_CPT_POINTER   p
 #endif /* DOXYGEN */
 
@@ -302,6 +320,8 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_CTYPE_CPT_DOUBLE     double
 # define _CPT_CTYPE_CPT_SCOMPLEX   cpt_scomplex_t
 # define _CPT_CTYPE_CPT_DCOMPLEX   cpt_dcomplex_t
+# define _CPT_CTYPE_CPT_RGB        cpt_rgb_t
+# define _CPT_CTYPE_CPT_RGBA       cpt_rgba_t
 # define _CPT_CTYPE_CPT_POINTER    void *
 #endif /* DOXYGEN */
 
@@ -496,6 +516,9 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 /** @brief Check whether @a id corresponds to a signed integer type. */
 #define CPT_IS_SIGNED(id)    _CPT_IS_SIGNED(CPT_TYPE(id))
 
+/** @brief Check whether @a id corresponds to a color (RGN or RGBA) type. */
+#define CPT_IS_COLOR(id)     _CPT_IS_COLOR(CPT_TYPE(id))
+
 /** @brief Check whether @a id corresponds to a void type. */
 #define CPT_IS_VOID(id)      _CPT_IS_VOID(CPT_TYPE(id))
 
@@ -529,6 +552,18 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 /** @brief Check whether @a id corresponds to a double precision floating-point. */
 #define CPT_IS_DOUBLE(id)    _CPT_IS_DOUBLE(CPT_TYPE(id))
 
+/** @brief Check whether @a id corresponds to a single precision complex. */
+#define CPT_IS_SCOMPLEX(id)  _CPT_IS_SCOMPLEX(CPT_TYPE(id))
+
+/** @brief Check whether @a id corresponds to a double precision complex. */
+#define CPT_IS_DCOMPLEX(id)  _CPT_IS_DCOMPLEX(CPT_TYPE(id))
+
+/** @brief Check whether @a id corresponds to (red, green, blue) triplet. */
+#define CPT_IS_RGB(id)       _CPT_IS_RGB(CPT_TYPE(id))
+
+/** @brief Check whether @a id corresponds to (red, green, blue, alpha) quadruplet. */
+#define CPT_IS_RGBA(id)      _CPT_IS_RGBA(CPT_TYPE(id))
+
 /** @brief Check whether @a id corresponds to a pointer type. */
 #define CPT_IS_POINTER(id)   _CPT_IS_POINTER(CPT_TYPE(id))
 
@@ -539,6 +574,7 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_IS_UNSIGNED(n)  (_CPT_IS_INTEGER(n) && (n)%2 == 0)
 # define _CPT_IS_SIGNED(n)    (_CPT_IS_INTEGER(n) && (n)%2 == 1)
 # define _CPT_IS_VOID(n)      ((n) == CPT_VOID)
+# define _CPT_IS_COLOR(n)     ((n) == CPT_RGB || (n) == CPT_RGBA)
 # define _CPT_IS_INT8(n)      ((n) == CPT_INT8)
 # define _CPT_IS_UINT8(n)     ((n) == CPT_UINT8)
 # define _CPT_IS_INT16(n)     ((n) == CPT_INT16)
@@ -549,6 +585,10 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_IS_UINT64(n)    ((n) == CPT_UINT64)
 # define _CPT_IS_FLOAT(n)     ((n) == CPT_FLOAT)
 # define _CPT_IS_DOUBLE(n)    ((n) == CPT_DOUBLE)
+# define _CPT_IS_SCOMPLEX(n)  ((n) == CPT_SCOMPLEX)
+# define _CPT_IS_DCOMPLEX(n)  ((n) == CPT_DCOMPLEX)
+# define _CPT_IS_RGB(n)       ((n) == CPT_RGB)
+# define _CPT_IS_RGBA(n)      ((n) == CPT_RGBA)
 # define _CPT_IS_POINTER(n)   ((n) == CPT_POINTER)
 #endif /* DOXYGEN */
 
@@ -583,19 +623,25 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 /** @brief Size in bytes of a 64-bit unsigned integer. */
 #define CPT_SIZEOF_UINT64   8
 
-// FIXME: the following should be constants
+/* FIXME: the following should be constants */
 
 /** @brief Size in bytes of a single precision floating-point. */
-#define CPT_SIZEOF_FLOAT  sizeof(float)
+#define CPT_SIZEOF_FLOAT    sizeof(float)
 
 /** @brief Size in bytes of a double precision floating-point. */
-#define CPT_SIZEOF_DOUBLE  sizeof(double)
+#define CPT_SIZEOF_DOUBLE   sizeof(double)
 
 /** @brief Size in bytes of a single precision complex. */
-#define CPT_SIZEOF_SCOMPLEX  sizeof(float)
+#define CPT_SIZEOF_SCOMPLEX (2*CPT_SIZEOF_FLOAT)
 
 /** @brief Size in bytes of a double precision complex. */
-#define CPT_SIZEOF_DCOMPLEX  sizeof(double)
+#define CPT_SIZEOF_DCOMPLEX (2*CPT_SIZEOF_double)
+
+/** @brief Size in bytes of an (red, green, blue) triplet. */
+#define CPT_SIZEOF_RGB      3
+
+/** @brief Size in bytes of an (red, green, blue, alpha) quadruplet. */
+#define CPT_SIZEOF_RGBA     4
 
 /** @brief Size in bytes of a pointer. */
 #define CPT_SIZEOF_POINTER  sizeof(void *)
@@ -613,6 +659,8 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_SIZEOF_CPT_DOUBLE   CPT_SIZEOF_DOUBLE
 # define _CPT_SIZEOF_CPT_SCOMPLEX CPT_SIZEOF_SCOMPLEX
 # define _CPT_SIZEOF_CPT_DCOMPLEX CPT_SIZEOF_DCOMPLEX
+# define _CPT_SIZEOF_CPT_RGB      CPT_SIZEOF_RGB
+# define _CPT_SIZEOF_CPT_RGBA     CPT_SIZEOF_RGBA
 # define _CPT_SIZEOF_CPT_POINTER  CPT_SIZEOF_POINTER
 #endif /* DOXYGEN */
 
@@ -647,6 +695,8 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_IDENT_DOUBLE    _CPT_DOUBLE
 # define _CPT_IDENT_SCOMPLEX  _CPT_SCOMPLEX
 # define _CPT_IDENT_DCOMPLEX  _CPT_DCOMPLEX
+# define _CPT_IDENT_RGB       _CPT_RGB
+# define _CPT_IDENT_RGBA      _CPT_RGBA
 # define _CPT_IDENT_POINTER   _CPT_POINTER
 
 # define _CPT_IDENT_0            _CPT_IDENT_VOID
@@ -662,7 +712,9 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_IDENT_10           _CPT_IDENT_DOUBLE
 # define _CPT_IDENT_11           _CPT_IDENT_SCOMPLEX
 # define _CPT_IDENT_12           _CPT_IDENT_DCOMPLEX
-# define _CPT_IDENT_13           _CPT_IDENT_POINTER
+# define _CPT_IDENT_13           _CPT_IDENT_RGB
+# define _CPT_IDENT_14           _CPT_IDENT_RGBA
+# define _CPT_IDENT_15           _CPT_IDENT_POINTER
 
 # define _CPT_IDENT_CPT_VOID     _CPT_IDENT_VOID
 # define _CPT_IDENT_CPT_INT8     _CPT_IDENT_INT8
@@ -677,6 +729,8 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_IDENT_CPT_DOUBLE   _CPT_IDENT_DOUBLE
 # define _CPT_IDENT_CPT_SCOMPLEX _CPT_IDENT_SCOMPLEX
 # define _CPT_IDENT_CPT_DCOMPLEX _CPT_IDENT_DCOMPLEX
+# define _CPT_IDENT_CPT_RGB      _CPT_IDENT_RGB
+# define _CPT_IDENT_CPT_RGBA     _CPT_IDENT_RGBA
 # define _CPT_IDENT_CPT_POINTER  _CPT_IDENT_POINTER
 
 # define _CPT_IDENT_x            _CPT_IDENT_VOID
@@ -688,10 +742,12 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_IDENT_u32          _CPT_IDENT_UINT32
 # define _CPT_IDENT_i64          _CPT_IDENT_INT64
 # define _CPT_IDENT_u64          _CPT_IDENT_UINT64
-# define _CPT_IDENT_s            _CPT_IDENT_FLOAT
+# define _CPT_IDENT_f            _CPT_IDENT_FLOAT
 # define _CPT_IDENT_d            _CPT_IDENT_DOUBLE
 # define _CPT_IDENT_c            _CPT_IDENT_SCOMPLEX
 # define _CPT_IDENT_z            _CPT_IDENT_DCOMPLEX
+# define _CPT_IDENT_rgb          _CPT_IDENT_RGB
+# define _CPT_IDENT_rgba         _CPT_IDENT_RGBA
 # define _CPT_IDENT_p            _CPT_IDENT_POINTER
 
 # define _CPT_IDENT_void           _CPT_IDENT_VOID
@@ -711,6 +767,10 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # define _CPT_IDENT_dcomplex_t     _CPT_IDENT_DCOMPLEX
 # define _CPT_IDENT_cpt_scomplex_t _CPT_IDENT_SCOMPLEX
 # define _CPT_IDENT_cpt_dcomplex_t _CPT_IDENT_DCOMPLEX
+# define _CPT_IDENT_rgb_t          _CPT_IDENT_RGB
+# define _CPT_IDENT_rgba_t         _CPT_IDENT_RGBA
+# define _CPT_IDENT_cpt_rgb_t      _CPT_IDENT_RGB
+# define _CPT_IDENT_cpt_rgba_t     _CPT_IDENT_RGBA
 # define _CPT_IDENT_pointer        _CPT_IDENT_POINTER
 
 #endif /* DOXYGEN */
@@ -769,6 +829,14 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 #ifdef _CPT_DCOMPLEX
 # warning macro _CPT_DCOMPLEX defined
 # undef _CPT_DCOMPLEX
+#endif
+#ifdef _CPT_RGB
+# warning macro _CPT_RGB defined
+# undef _CPT_RGB
+#endif
+#ifdef _CPT_RGBA
+# warning macro _CPT_RGBA defined
+# undef _CPT_RGBA
 #endif
 #ifdef _CPT_POINTER
 # warning macro _CPT_POINTER defined
@@ -934,11 +1002,9 @@ typedef struct { double re, im; } cpt_dcomplex_t;
 # error uint32_t is not an unsigned integer (BUG)
 #endif
 
-/*---------------------------------------------------------------------------*/
-
 /** @} */
 
-#endif /* _CPT_H */
+#endif /* _CPT_H ------------------------------------------------------------*/
 
 /*
  * Local Variables:
