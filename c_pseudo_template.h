@@ -34,8 +34,12 @@
  *
  *-----------------------------------------------------------------------------
  *
- * $Id: c_pseudo_template.h,v 1.1 2009/11/15 07:39:54 eric Exp eric $
+ * $Id: c_pseudo_template.h,v 1.2 2009/11/23 16:24:24 eric Exp eric $
  * $Log: c_pseudo_template.h,v $
+ * Revision 1.2  2009/11/23 16:24:24  eric
+ *  - Some minor bugs fixed.
+ *  - New types for color images: RGB and RGBA.
+ *
  * Revision 1.1  2009/11/15 07:39:54  eric
  * Initial revision
  *
@@ -592,6 +596,8 @@ typedef struct { uint8_t r, g, b, a; } cpt_rgba_t;
 # define _CPT_IS_POINTER(n)   ((n) == CPT_POINTER)
 #endif /* DOXYGEN */
 
+/*---------------------------------------------------------------------------*/
+
 /** @brief Yield size of basic data type.
  *
  *  This macro yields size (in bytes) of data type according to its
@@ -666,7 +672,106 @@ typedef struct { uint8_t r, g, b, a; } cpt_rgba_t;
 
 /*---------------------------------------------------------------------------*/
 
-/**
+/** @brief Yield minimum value of basic data type.
+ *
+ *  This macro yields the minimum value of data type according to its
+ *  argument (see CPT_TYPE()).
+ */
+#define CPT_MIN_VALUE(id)  CPT_JOIN2(_CPT_MIN,_CPT_IDENT(id))
+
+/** @brief Yield maximum value of basic data type.
+ *
+ *  This macro yields the maximum value of data type according to its
+ *  argument (see CPT_TYPE()).
+ */
+#define CPT_MAX_VALUE(id)  CPT_JOIN2(_CPT_MAX,_CPT_IDENT(id))
+
+/** @brief Minimum value of a 8-bit signed integer. */
+#define CPT_MIN_INT8  (-128)
+
+/** @brief Maximum value of a 8-bit signed integer. */
+#define CPT_MAX_INT8    127
+
+/** @brief Minimum value of a 8-bit unsigned integer. */
+#define CPT_MIN_UINT8     0
+
+/** @brief Maximum value of a 8-bit unsigned integer. */
+#define CPT_MAX_UINT8   255
+
+/** @brief Minimum value of a 16-bit signed integer. */
+#define CPT_MIN_INT16  (-32768)
+
+/** @brief Maximum value of a 16-bit signed integer. */
+#define CPT_MAX_INT16    32767
+
+/** @brief Minimum value of a 16-bit unsigned integer. */
+#define CPT_MIN_UINT16       0
+
+/** @brief Maximum value of a 16-bit unsigned integer. */
+#define CPT_MAX_UINT16   65535
+
+/** @brief Minimum value of a 32-bit signed integer. */
+#define CPT_MIN_INT32  (-CPT_MAX_INT32 - 1)
+
+/** @brief Maximum value of a 32-bit signed integer. */
+#define CPT_MAX_INT32    2147483647L
+
+/** @brief Minimum value of a 32-bit unsigned integer. */
+#define CPT_MIN_UINT32     0
+
+/** @brief Maximum value of a 32-bit unsigned integer. */
+#define CPT_MAX_UINT32  (CPT_MAX_INT32*2UL + 1)
+
+/** @brief Minimum value of a 64-bit signed integer. */
+#define CPT_MIN_INT64  (-CPT_MAX_INT64 - 1)
+
+/** @brief Maximum value of a 64-bit signed integer. */
+#define CPT_MAX_INT64    9223372036854775807LL
+
+/** @brief Minimum value of a 64-bit unsigned integer. */
+#define CPT_MIN_UINT64     0
+
+/** @brief Maximum value of a 64-bit unsigned integer. */
+#define CPT_MAX_UINT64   (CPT_MAX_INT64*2ULL + 1)
+
+/** @brief Minimum value of a single precision floating-point. */
+#define CPT_MIN_FLOAT     (-FLT_MAX)
+
+/** @brief Maximum value of a single precision floating-point. */
+#define CPT_MAX_FLOAT       FLT_MAX
+
+/** @brief Minimum value of a double precision floating-point. */
+#define CPT_MIN_DOUBLE    (-DBL_MAX)
+
+/** @brief Maximum value of a double precision floating-point. */
+#define CPT_MAX_DOUBLE      DBL_MAX
+
+#ifndef DOXYGEN
+# define _CPT_MIN_CPT_INT8     CPT_MIN_INT8
+# define _CPT_MIN_CPT_UINT8    CPT_MIN_UINT8
+# define _CPT_MIN_CPT_INT16    CPT_MIN_INT16
+# define _CPT_MIN_CPT_UINT16   CPT_MIN_UINT16
+# define _CPT_MIN_CPT_INT32    CPT_MIN_INT32
+# define _CPT_MIN_CPT_UINT32   CPT_MIN_UINT32
+# define _CPT_MIN_CPT_INT64    CPT_MIN_INT64
+# define _CPT_MIN_CPT_UINT64   CPT_MIN_UINT64
+# define _CPT_MIN_CPT_FLOAT    CPT_MIN_FLOAT
+# define _CPT_MIN_CPT_DOUBLE   CPT_MIN_DOUBLE
+# define _CPT_MAX_CPT_INT8     CPT_MAX_INT8
+# define _CPT_MAX_CPT_UINT8    CPT_MAX_UINT8
+# define _CPT_MAX_CPT_INT16    CPT_MAX_INT16
+# define _CPT_MAX_CPT_UINT16   CPT_MAX_UINT16
+# define _CPT_MAX_CPT_INT32    CPT_MAX_INT32
+# define _CPT_MAX_CPT_UINT32   CPT_MAX_UINT32
+# define _CPT_MAX_CPT_INT64    CPT_MAX_INT64
+# define _CPT_MAX_CPT_UINT64   CPT_MAX_UINT64
+# define _CPT_MAX_CPT_FLOAT    CPT_MAX_FLOAT
+# define _CPT_MAX_CPT_DOUBLE   CPT_MAX_DOUBLE
+#endif /* DOXYGEN */
+
+/*---------------------------------------------------------------------------*/
+
+/** 
  * @brief Expand known type identifier into internal suffix.
  *
  * Expand known (see CPT_TYPE) type identifier to unique internal suffix.
