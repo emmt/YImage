@@ -5,7 +5,7 @@
  *
  *-----------------------------------------------------------------------------
  *
- * Copyright (C) 2009 Eric Thiébaut <thiebaut@obs.univ-lyon1.fr>
+ * Copyright (C) 2009-2013 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
  *
  * This software is governed by the CeCILL-C license under French law and
  * abiding by the rules of distribution of free software.  You can use, modify
@@ -33,10 +33,6 @@
  * knowledge of the CeCILL-C license and that you accept its terms.
  *
  *-----------------------------------------------------------------------------
- *
- * $Id$
- * $Log$
- *-----------------------------------------------------------------------------
  */
 
 #include <limits.h>
@@ -44,9 +40,14 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <pstdlib.h>
 #include <yapi.h>
 
 #include "img.h"
+#include "img_version.h"
+
+/* This macro returns the number of elements of a fixed size array. */
+#define NUMBEROF(arr)  (sizeof(arr)/sizeof(arr[0]))
 
 /* Macro to get rid of some GCC extensions when not compiling with GCC. */
 #if ! (defined(__GNUC__) && __GNUC__ > 1)
@@ -116,6 +117,7 @@ PLUG_API void y_error(const char *msg) __attribute__ ((noreturn));
           (*(CLASS##_t **)yget_obj(IARG, &ytype_##CLASS))
 
 /* Built-in functions defined in this file. */
+extern void Y_img_get_version(int argc);
 extern void Y__img_init(int argc);
 extern void Y_img_morph_erosion(int argc);
 extern void Y_img_morph_dilation(int argc);
@@ -137,19 +139,17 @@ extern void Y_img_get_type(int argc);
 extern void Y_img_estimate_noise(int argc);
 extern void Y_img_cost_l2(int argc);
 
+typedef struct _image image_t;
 struct _image {
   void *data;
   long width, height;
-  int img_type;   /* pixel type, one of the IMG_TYPE_* values */
-  int yor_type;   /* Yorick data type (Y_CHAR, Y_INT, etc.). This member is
-                     automatically set by get_image(), new_image(), and must
-                     be considered as read-only otherwise. */
+  int type;   /* pixel type, one of the IMG_TYPE_* values */
 };
-typedef struct _image image_t;
 
 static void get_image(int iarg, image_t *img);
 static void new_image(image_t *img);
 
+static void push_string(const char *value);
 static void convert_image(int iarg, image_t *img, int new_img_type);
 static int get_binop_type(int left_type, int right_type);
 static void get_range_or_length(int iarg, long *start, long *stop, long *step,
@@ -240,7 +240,7 @@ void Y_img_extract_rectangle(int argc)
     y_error("wrong number of arguments");
   }
   get_image(2, &img);
-  type = img.img_type;
+  type = img.type;
   if ((type == IMG_TYPE_COMPLEX) ||
       (type == IMG_TYPE_RGB) || (type == IMG_TYPE_RGBA)) {
     y_error("operations not yet implemented for color or complex images");
@@ -327,7 +327,7 @@ void Y_img_estimate_noise(int argc)
     y0 = 0;
     y1 = img.height;
   }
-  result = img_estimate_noise(img.img_type, img.data, x0 + img.width*y0,
+  result = img_estimate_noise(img.type, img.data, x0 + img.width*y0,
                               x1 - x0, y1 - y0, img.width, method);
   if (result < 0.0) y_error("bad pixel type");
   ypush_double(result);
@@ -365,7 +365,7 @@ void Y_img_cost_l2(int argc)
   get_image(13, &a);
 
   /* Check arguments. */
-  type = get_binop_type(a.img_type, b.img_type);
+  type = get_binop_type(a.type, b.type);
   if (type == IMG_TYPE_NONE) {
     y_error("incompatible image types");
   }
@@ -394,10 +394,10 @@ void Y_img_cost_l2(int argc)
     y_error("out of range sub-image bound(s)");
   }
 
-  if (a.img_type != type) {
+  if (a.type != type) {
     convert_image(13, &a, type);
   }
-  if (b.img_type != type) {
+  if (b.type != type) {
     convert_image(8, &b, type);
   }
 
@@ -414,7 +414,7 @@ void Y_img_cost_l2(int argc)
                     dx, dy, bg, scl);
   if (res < 0.0) {
     y_error("bad pixel type");
-  } 
+  }
   ypush_double(res);
 }
 
@@ -466,14 +466,14 @@ static void img_morph_operation(int argc, int what)
   src = img.data;
   if (what == EROSION) {
     new_image(&img);
-    if (img_morph_lmin_lmax(img.img_type, img.width, img.height,
+    if (img_morph_lmin_lmax(img.type, img.width, img.height,
                             src, img.width, r, ws, img.data, img.width,
                             NULL, 0) != IMG_SUCCESS) {
       goto error;
     }
   } else if (what == DILATION) {
     new_image(&img);
-    if (img_morph_lmin_lmax(img.img_type, img.width, img.height,
+    if (img_morph_lmin_lmax(img.type, img.width, img.height,
                             src, img.width, r, ws, NULL, 0,
                             img.data, img.width) != IMG_SUCCESS) {
       goto error;
@@ -486,7 +486,7 @@ static void img_morph_operation(int argc, int what)
     new_image(&img);
     lmax_ptr = img.data;
     yput_global(lmax_ref, 0);
-    if (img_morph_lmin_lmax(img.img_type, img.width, img.height,
+    if (img_morph_lmin_lmax(img.type, img.width, img.height,
                             src, img.width, r, ws, lmin_ptr, img.width,
                             lmax_ptr, img.width) != IMG_SUCCESS) {
       goto error;
@@ -496,7 +496,7 @@ static void img_morph_operation(int argc, int what)
   } else if (what == OPENING) {
     /* Perform an erosion followed by a dilation. */
     new_image(&img);
-    if (img_morph_lmin_lmax(img.img_type, img.width, img.height,
+    if (img_morph_lmin_lmax(img.type, img.width, img.height,
                             src, img.width, r, ws, img.data,
                             img.width, NULL, 0) != IMG_SUCCESS) {
       goto error;
@@ -505,7 +505,7 @@ static void img_morph_operation(int argc, int what)
     yarg_drop(1); /* get rid of no longer needed input image */
     src = img.data; /* temporary result is the source of next operation */
     new_image(&img); /* allocate image for next operation */
-    if (img_morph_lmin_lmax(img.img_type, img.width, img.height,
+    if (img_morph_lmin_lmax(img.type, img.width, img.height,
                             src, img.width, r, ws, NULL, 0,
                             img.data, img.width) != IMG_SUCCESS) {
       goto error;
@@ -513,7 +513,7 @@ static void img_morph_operation(int argc, int what)
   } else if (what == CLOSING) {
     /* Perform a dilation followed by an erosion. */
     new_image(&img);
-    if (img_morph_lmin_lmax(img.img_type, img.width, img.height,
+    if (img_morph_lmin_lmax(img.type, img.width, img.height,
                             src, img.width, r, ws, NULL, 0,
                             img.data, img.width) != IMG_SUCCESS) {
       goto error;
@@ -522,7 +522,7 @@ static void img_morph_operation(int argc, int what)
     yarg_drop(1); /* get rid of no longer needed input image */
     src = img.data; /* temporary result is the source of next operation */
     new_image(&img); /* allocate image for next operation */
-    if (img_morph_lmin_lmax(img.img_type, img.width, img.height,
+    if (img_morph_lmin_lmax(img.type, img.width, img.height,
                             src, img.width, r, ws, img.data,
                             img.width, NULL, 0) != IMG_SUCCESS) {
       goto error;
@@ -558,6 +558,43 @@ extern void Y_img_morph_opening(int argc)
 extern void Y_img_morph_closing(int argc)
 {
   img_morph_operation(argc, CLOSING);
+}
+
+/*---------------------------------------------------------------------------*/
+/* DETECTION */
+
+extern void Y_img_detect_spot(int argc)
+{
+  image_t img;
+  const void* src;
+  int* dst;
+  double* ws;
+  double c0, c1, c2, t0, t1, t2;
+  long count;
+  int type, iarg;
+
+  if (argc != 7) y_error("wrong number of arguments");
+  iarg = argc - 1;
+  get_image(iarg, &img);
+  type = img.type;
+  if (type < IMG_TYPE_INT8 || type > IMG_TYPE_DOUBLE) {
+    y_error("bad image type");
+  }
+  src = img.data;
+  --iarg; c0 = ygets_d(iarg);
+  --iarg; c1 = ygets_d(iarg);
+  --iarg; c2 = ygets_d(iarg);
+  --iarg; t0 = ygets_d(iarg);
+  --iarg; t1 = ygets_d(iarg);
+  --iarg; t2 = ygets_d(iarg);
+  ws = (double*)ypush_scratch(3*img.width*sizeof(double), NULL);
+  img.type = IMG_TYPE_INT;
+  new_image(&img);
+  dst = (int*)img.data;
+  if (img_detect_spot(src, type, img.width, img.height, c0, c1, c2,
+                      t0, t1, t2, dst, &count, ws) != IMG_SUCCESS) {
+    y_error("operation failed (bug?)");
+  }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -626,8 +663,8 @@ extern void Y_img_is_color(int argc)
   image_t img;
   if (argc != 1) y_error("wrong number of arguments");
   get_image(0, &img);
-  ypush_int((((img.img_type == IMG_TYPE_RGB) ||
-              (img.img_type == IMG_TYPE_RGBA)) ? 1 : 0));
+  ypush_int((((img.type == IMG_TYPE_RGB) ||
+              (img.type == IMG_TYPE_RGBA)) ? 1 : 0));
 }
 
 extern void Y_img_is_rgb(int argc)
@@ -635,7 +672,7 @@ extern void Y_img_is_rgb(int argc)
   image_t img;
   if (argc != 1) y_error("wrong number of arguments");
   get_image(0, &img);
-  ypush_int(((img.img_type == IMG_TYPE_RGB) ? 1 : 0));
+  ypush_int(((img.type == IMG_TYPE_RGB) ? 1 : 0));
 }
 
 extern void Y_img_is_rgba(int argc)
@@ -643,7 +680,7 @@ extern void Y_img_is_rgba(int argc)
   image_t img;
   if (argc != 1) y_error("wrong number of arguments");
   get_image(0, &img);
-  ypush_int(((img.img_type == IMG_TYPE_RGBA) ? 1 : 0));
+  ypush_int(((img.type == IMG_TYPE_RGBA) ? 1 : 0));
 }
 
 extern void Y_img_is_complex(int argc)
@@ -651,7 +688,7 @@ extern void Y_img_is_complex(int argc)
   image_t img;
   if (argc != 1) y_error("wrong number of arguments");
   get_image(0, &img);
-  ypush_int(((img.img_type == IMG_TYPE_COMPLEX) ? 1 : 0));
+  ypush_int(((img.type == IMG_TYPE_COMPLEX) ? 1 : 0));
 }
 
 static void get_channel(int argc, long chn);
@@ -693,9 +730,9 @@ static void get_channel(int iarg, long chn)
   unsigned char *src, *dst;
 
   get_image(iarg, &img);
-  if (img.img_type == IMG_TYPE_RGB) {
+  if (img.type == IMG_TYPE_RGB) {
     stride = 3;
-  } else if (img.img_type == IMG_TYPE_RGBA) {
+  } else if (img.type == IMG_TYPE_RGBA) {
     stride = 4;
   } else {
     stride = 0;
@@ -710,7 +747,7 @@ static void get_channel(int iarg, long chn)
     if (chn == 4) y_error("image has no alpha channel");
   }
   src = (unsigned char *)img.data;
-  img.img_type = IMG_TYPE_BYTE;
+  img.type = IMG_TYPE_BYTE;
   new_image(&img);
   dst = (unsigned char *)img.data;
   npixels = img.width*img.height;
@@ -788,7 +825,7 @@ void Y_img_segmentation_new(int argc)
   }
   get_image(1, &img);
   threshold = ygets_d(0);
-  sgm = img_segmentation_new(img.data, img.img_type, 0, img.width, img.height,
+  sgm = img_segmentation_new(img.data, img.type, 0, img.width, img.height,
                              img.width, threshold);
   if (sgm == NULL) {
     int code = errno;
@@ -963,16 +1000,15 @@ static img_chainpool_t *yget_img_chainpool(int iarg)
 
 void Y_img_chainpool_new(int argc)
 {
-  const long NKEYS = 10;
-  static char *knames[NKEYS + 1] = {"satol", "srtol", "drmin", "drmax",
-                                    "slope", "aatol", "artol", "prec",
-                                    "lmin", "lmax", NULL};
-  static long kglobs[NKEYS + 1];
+  static char *knames[] = {"satol", "srtol", "drmin", "drmax",
+                           "slope", "aatol", "artol", "prec",
+                           "lmin", "lmax", NULL};
+  static long kglobs[NUMBEROF(knames)];
   img_segmentation_t *sgm;
   img_chainpool_t *chn;
   double satol, srtol, drmin, drmax, slope, aatol, artol, prec;
   long lmin, lmax;
-  int kiargs[NKEYS], iarg, n;
+  int kiargs[NUMBEROF(knames) - 1], iarg, n;
 
   /* Parse arguments and keywords. */
   sgm = NULL;
@@ -1121,6 +1157,30 @@ BUILTIN(length, ypush_long, ypush_l)
 /*---------------------------------------------------------------------------*/
 /* UTILITIES */
 
+extern void Y_img_get_version(int argc)
+{
+  if (argc != 1) {
+    y_error("wrong number of arguments");
+  }
+  if (yarg_nil(0)) {
+    char buffer[80];
+    sprintf(buffer, "%d.%d.%d", IMG_VERSION_MAJOR,
+            IMG_VERSION_MINOR, IMG_VERSION_PATCH);
+    push_string(buffer);
+  } else {
+    long what = ygets_l(0);
+    if (what == 0) {
+      ypush_long(IMG_VERSION_MAJOR);
+    } else if (what == 1) {
+      ypush_long(IMG_VERSION_MINOR);
+    } else if (what == 2) {
+      ypush_long(IMG_VERSION_PATCH);
+    } else {
+      y_error("argument must be: nil, 0, 1 or 2");
+    }
+  }
+}
+
 extern void Y__img_init(int argc)
 {
   volatile void *temp;
@@ -1172,12 +1232,12 @@ extern void Y__img_init(int argc)
 
   type_convert_table = (int *)malloc((yor_ntypes + img_ntypes)*sizeof(int));
   if (type_convert_table == NULL) {
-    y_error("insufficient memory for type conversion table");
+    y_error("insufficient memory for image type conversion table");
   }
 
   img_type_to_yor_type = type_convert_table - img_type_min;
   yor_type_to_img_type = type_convert_table + img_ntypes - yor_type_min;
-  
+
   /* Initialize conversion tables with "bad" types. */
   for (i = img_type_min; i <= img_type_max; ++i) {
     img_type_to_yor_type[i] = yor_type_min - 1;
@@ -1207,7 +1267,7 @@ extern void Y__img_init(int argc)
   img_type_to_yor_type[IMG_TYPE_RGB] = Y_CHAR;
   img_type_to_yor_type[IMG_TYPE_RGBA] = Y_CHAR;
 
-#if 0
+#if 0 /* DEBUG */
 #define PRT(expr) fprintf(stderr, "%20s = %3d\n", #expr, expr)
   PRT(CPT_INT8);
   PRT(CPT_UINT8);
@@ -1289,7 +1349,12 @@ extern void Y__img_init(int argc)
   }
 #undef PRT
 
-#endif
+#endif /* DEBUG */
+}
+
+static void push_string(const char *value)
+{
+  ypush_q((long *)NULL)[0] = (value ? p_strcpy((char *)value) : NULL);
 }
 
 static void get_image(int iarg, image_t *img)
@@ -1310,18 +1375,16 @@ static void get_image(int iarg, image_t *img)
   if (rank == 2) {
     img->width = dims[1];
     img->height = dims[2];
-    img->img_type = img_type;
-    img->yor_type = yor_type;
+    img->type = img_type;
     return;
   } else if ((rank == 3) && (img_type == IMG_TYPE_BYTE)) {
     img->width = dims[2];
     img->height = dims[3];
-    img->yor_type = yor_type;
     if (dims[1] == 3) {
-      img->img_type = IMG_TYPE_RGB;
+      img->type = IMG_TYPE_RGB;
       return;
     } else if (dims[1] == 4) {
-      img->img_type = IMG_TYPE_RGBA;
+      img->type = IMG_TYPE_RGBA;
       return;
     }
   }
@@ -1333,7 +1396,7 @@ static void new_image(image_t *img)
   long dims[4];
   int img_type, yor_type;
 
-  img_type = img->img_type;
+  img_type = img->type;
   if ((img_type >= img_type_min) && (img_type <= img_type_max)) {
     yor_type = img_type_to_yor_type[img_type];
   } else {
@@ -1357,14 +1420,12 @@ static void new_image(image_t *img)
       dims[2] = img->height;
     }
     img->data = (void *)ypush_c(dims);
-    img->yor_type = yor_type;
     break;
 #define NEW2(pusher)                              \
     dims[0] = 2;                                  \
     dims[1] = img->width;                         \
     dims[2] = img->height;                        \
     img->data = (void *)pusher(dims);             \
-    img->yor_type = yor_type;                     \
     break
   case Y_SHORT:   NEW2(ypush_s);
   case Y_INT:     NEW2(ypush_i);
@@ -1380,13 +1441,13 @@ static void new_image(image_t *img)
 
 static void convert_image(int iarg, image_t *img, int new_img_type)
 {
-  int old_img_type = img->img_type;
+  int old_img_type = img->type;
   const void *old_data = img->data;
-  img->img_type = new_img_type;
+  img->type = new_img_type;
   new_image(img);
   if (img_copy(img->width, img->height,
                old_data, old_img_type, 0, img->width,
-               img->data, img->img_type, 0, img->width) != IMG_SUCCESS) {
+               img->data, img->type, 0, img->width) != IMG_SUCCESS) {
     y_error("incompatible pixel types");
   }
   yarg_swap(iarg + 1, 0);

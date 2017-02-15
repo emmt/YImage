@@ -34,8 +34,11 @@
  *
  *-----------------------------------------------------------------------------
  *
- * $Id: c_pseudo_template.h,v 1.2 2009/11/23 16:24:24 eric Exp eric $
+ * $Id: c_pseudo_template.h,v 1.3 2009/12/10 08:57:50 eric Exp $
  * $Log: c_pseudo_template.h,v $
+ * Revision 1.3  2009/12/10 08:57:50  eric
+ *  - New macros for min/max values.
+ *
  * Revision 1.2  2009/11/23 16:24:24  eric
  *  - Some minor bugs fixed.
  *  - New types for color images: RGB and RGBA.

@@ -1,0 +1,63 @@
+
+                              YImage
+                              ******
+
+YImage is a Yorick plugin for image-like operations.  As far as possible
+Yorick arrays are interpreted as images: numerical 2D array are grayscale
+images, 3-by-WIDTH-by-HEIGHT char arrays are RGB images (of dimensions WIDTH
+and HEIGHT), and 4-by-WIDTH-by-HEIGHT char arrays are RGBA images (red, green,
+blue, alpha).
+
+This version provides:
+
+ - basic image management: is_image, img_is_complex, img_is_color img_is_rgb,
+          img_is_rgba, img_get_height, img_get_width, img_get_type,
+          img_get_red, img_get_green, img_get_blue, img_get_alpha,
+          img_get_channel
+
+ - linear transform of the coordinate of an image: img_extract_rectangle,
+          img_rotate ;
+
+ - morpho-math operations: img_morph_black_top_hat img_morph_closing,
+          img_morph_dilation, img_morph_enhance, img_morph_erosion,
+          img_morph_lmin_lmax, img_morph_opening, img_morph_trilevel,
+          img_morph_white_top_hat;
+
+ - image segmentation (see img_segmentation_new);
+
+ - functions to manage pools of chains of image segments (see img_chainpool_new
+
+ - pixelwise comparison of images (see img_cost_l2);
+
+ - estimate the noise level in an image (see img_estimate_noise)
+
+ - miscellaneous functions: img_define_constant, img_get_symbol,
+          img_get_version;
+
+
+INSTALLATION
+============
+
+Unpack the archive, then update the Makefile, build the plug-in and install it
+(VERSION stores the version number):
+
+   tar jxvf YImage-$VERSION.tar.bz2
+   cd YImage-$VERSION
+   yorick -batch make.i
+   make clean
+   make
+   make install
+
+To use the plugin, just load "image.i" (all functions provided by the plugin
+are prefixed with "img_" and global constant names are prefixed with "IMG_"):
+
+   yorick
+   > include, "image.i";
+   > help, img_get_width
+
+
+AUTHOR
+======
+
+Eric Thiébaut (Observatoire de Lyon, France)
+<thiebaut@obs.univ-lyon1.fr>

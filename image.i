@@ -4,7 +4,7 @@
  *
  *-----------------------------------------------------------------------------
  *
- * Copyright (C) 2009 Eric Thiébaut <thiebaut@obs.univ-lyon1.fr>
+ * Copyright (C) 2013 Eric Thiébaut <eric.thiebaut@obs.univ-lyon1.fr>
  *
  * This software is governed by the CeCILL-C license under French law and
  * abiding by the rules of distribution of free software.  You can use, modify
@@ -33,12 +33,15 @@
  *
  *-----------------------------------------------------------------------------
  *
- * $Id$
- * $Log$
+ * $Id: image.i,v 1.1 2009/12/10 08:51:22 eric Exp eric $
+ * $Log: image.i,v $
+ * Revision 1.1  2009/12/10 08:51:22  eric
+ * Initial revision
+ *
  *-----------------------------------------------------------------------------
  */
 
-if (is_func(plug_in)) plug_in, "image";
+if (is_func(plug_in)) plug_in, "yimage";
 
 /*---------------------------------------------------------------------------*/
 /* BASIC IMAGE FUNCTIONS */
@@ -86,7 +89,7 @@ extern is_image;
 
 extern img_is_complex;
 /* DOCUMENT img_is_complex(img);
-         
+
      This function check whether IMG is a complex image.  An error is raised
      if IMG is not a valid image (see is_image for the definition of a valid
      image).
@@ -99,7 +102,6 @@ extern img_is_rgba;
 /* DOCUMENT img_is_color(img);
          or img_is_rgb(img);
          or img_is_rgba(img);
-         
      These functions check whether IMG is a color image, an RGB image or an
      RGBA image.  An error is raised if IMG is not a valid image (see is_image
      for the definition of a valid image).
@@ -122,7 +124,7 @@ func img_get_symbol(__1)
      function is a workaround symbol_def function for which the symbol must
      exist.  The side effect is that NAME is created in Yorick table of global
      symbol if it does not yet exists.
-     
+
    SEE ALSO: symbol_def, catch.
  */
 {
@@ -139,10 +141,10 @@ func img_get_symbol(__1)
 
 func img_define_constant(__1, __2)
 /* DOCUMENT img_define_constant, name, value;
-     This function defines a global constant in Yorick.  An error is raised
-     if the constant is already defined with a different definition.
-     
-   SEE ALSO: symbol_def, catch.
+     This subroutine defines a global constant in Yorick.  An error is
+     raised if the constant is already defined with a different value.
+
+   SEE ALSO: img_get_symbol.
  */
 {
   __3 = img_get_symbol(__1);
@@ -176,7 +178,7 @@ extern img_get_type;
        IMG_TYPE_COMPLEX = Y_COMPLEX    =  6
        IMG_TYPE_RGB     = Y_OPAQUE + 1 = 18
        IMG_TYPE_RGBA    = Y_OPAQUE + 1 = 19
-             
+
      As a convenience, the Yorick types (Y_CHAR, Y_SHORT, etc.) are also
      defined as global integer constants.
 
@@ -221,9 +223,9 @@ extern img_get_alpha;
          or img_get_blue(img);
          or img_get_alpha(img);
      These functions return a given color channel of image IMG.  CHN is 1 for
-     red, 2 for blue, 3 for green, and 3 for alpha (transparency).  Image must
-     be of RGB or RGBA type.
-     
+     red, 2 for blue, 3 for green, and 4 for alpha (transparency).  Image IMG
+     must be of RGB or RGBA type.
+
    SEE ALSO: img_is_rgb. */
 
 /*---------------------------------------------------------------------------*/
@@ -239,7 +241,7 @@ extern img_extract_rectangle;
  *   the witdh (height) of the destination or a range to specify the start and
  *   end destination abscissae (ordinates) to use.  For instance, XSPAN=WIDTH
  *   is the same as XSPAN=1:WIDTH.
- *   
+ *
  *   If A is omitted, the image and region of interest have the same
  *   coordinate system.  If argument A is provided, it is a 6-element array of
  *   reals to convert image coordinates (X,Y) into coordinates (XR,YR) in the
@@ -249,7 +251,7 @@ extern img_extract_rectangle;
  *     YR = A(4) + A(5)*X + A(6)*Y;
  *
  *   Note that Yorick conventions are followed, hence the origin of the source
- *   coordinates are (1,1).  Unless a range is explictely specified, this is
+ *   coordinates are (1,1).  Unless a range is explicitly specified, this is
  *   also true for the destination.
  *
  *   Alternatively, the array A may be specified by the list of its
@@ -268,24 +270,24 @@ extern img_extract_rectangle;
  *
  * EXAMPLE OF A ROTATION
  *
- * We consider a rotation by an angle Q around center at (SRC_X0, SRC_Y0) in
- * source image and (DST_X0, DST_Y0) in destination image.  The direct
- * transform writes:
+ *   We consider a rotation by an angle Q around center at (SRC_X0, SRC_Y0) in
+ *   source image and (DST_X0, DST_Y0) in destination image.  The direct
+ *   transform writes:
  *
- *   dst_x = dst_x0 + cos(q)*(src_x - src_x0) - sin(q)*(src_y - src_y0)
- *   dst_y = dst_y0 + sin(q)*(src_x - src_x0) + cos(q)*(src_y - src_y0)
+ *     dst_x = dst_x0 + cos(q)*(src_x - src_x0) - sin(q)*(src_y - src_y0)
+ *     dst_y = dst_y0 + sin(q)*(src_x - src_x0) + cos(q)*(src_y - src_y0)
  *
- * hence:
+ *   hence:
  *
- *   a2 =  (a6 = cos(q));
- *   a3 = -(a5 = sin(q));
- *   a1 =  dst_x0 - a2*src_x0 - a3*src_y0;
- *   a4 =  dst_y0 - a5*src_x0 - a6*src_y0;
+ *     a2 =  (a6 = cos(q));
+ *     a3 = -(a5 = sin(q));
+ *     a1 =  dst_x0 - a2*src_x0 - a3*src_y0;
+ *     a4 =  dst_y0 - a5*src_x0 - a6*src_y0;
  *
- * while the inverse transform writes:
+ *   while the inverse transform writes:
  *
- *   src_x = src_x0 + cos(q)*(dst_x - dst_x0) + sin(q)*(dst_y - dst_y0)
- *   src_y = src_y0 - sin(q)*(dst_x - dst_x0) + cos(q)*(dst_y - dst_y0)
+ *     src_x = src_x0 + cos(q)*(dst_x - dst_x0) + sin(q)*(dst_y - dst_y0)
+ *     src_y = src_y0 - sin(q)*(dst_x - dst_x0) + cos(q)*(dst_y - dst_y0)
  *
  * hence:
  *
@@ -303,19 +305,17 @@ extern img_extract_rectangle;
  *   obeys:
  *
  *   FIXME:
- *   
+ *
  *     DST_X - DST_X0 + 1 = A1 + A2*(SRC_X - SRC_X0 + 1) + A3*(Y - SRC_X0 + 1)
  *     DST_Y - DST_Y0 + 1 = A4 + A5*(SRC_X - SRC_X0 + 1) + A6*(Y - SRC_X0 + 1)
  *
  *     A1 <== A1 - (1 - DST_X0) + A2*(1 - SRC_X0) + A3*(1 - SRC_X0)
  *     A4 <== A4 - (1 - DST_Y0) + A5*(1 - SRC_X0) + A6*(1 - SRC_X0)
- *    
- *  
+ *
+ *
  * SEE ALSO interp, img_rotate.
  */
 
-/*
- */
 func img_rotate(img, theta, xcen, ycen, pad=)
 /* DOCUMENT img_rotate(img, theta);
          or img_rotate(img, theta, xcen, ycen);
@@ -326,7 +326,7 @@ func img_rotate(img, theta, xcen, ycen, pad=)
 
      Keyword PAD can be used to specify the value of pixels ouside the image
      boundaries.  By default, missing values are extrapolated from the edges.
-     
+
    SEE ALSO:
  */
 {
@@ -358,7 +358,6 @@ func img_rotate(img, theta, xcen, ycen, pad=)
   a4 =  dst_y0 - a5*src_x0 - a6*src_y0;
 
   return img_extract_rectangle(img, width, height, a1, a2, a3, a4, a5, a6);
-
 }
 
 /*---------------------------------------------------------------------------*/
@@ -376,7 +375,7 @@ extern img_estimate_noise;
       Note that the sub-image bounds (X0, X1, Y0, and Y1) follow Yorick
       conventions: they are 1-based, and a value less or equal zero
       indicates a bound relative to the end.
-     
+
    SEE ALSO:
  */
 
@@ -399,7 +398,7 @@ extern img_cost_l2;
       Note that the sub-image bounds (AX0, AX1, etc.) follow Yorick
       conventions: 1-based, less or equal zero to indicate a bound
       relative to the end.
-     
+
    SEE ALSO:
  */
 
@@ -421,7 +420,7 @@ extern img_morph_lmin_lmax;
 
       The function img_morph_dilation() returns the result of a morpho-math
       dilation; that is, the local maxima of the pixels of IMG.
-      
+
       The subroutine img_morph_lmin_lmax stores the result of an erosion and
       a dilation in symbols LMIN and LMAX respectively.  It is almost twice
       as fast as the equivalent:
@@ -457,7 +456,7 @@ local img_morph_black_top_hat;
          or img_morph_white_top_hat(img, r, s);
          or img_morph_black_top_hat(img, r);
          or img_morph_black_top_hat(img, r, s);
-         
+
      Perform a summit/valley detection by applying a top-hat filter to image
      IMG.  Argument R defines the radius of the structuring element for the
      feature detection.  Optional argument S gives the radius of the
@@ -486,7 +485,7 @@ func img_morph_black_top_hat(a, r, s)
 func img_morph_enhance(a, r, s)
 /* DOCUMENT img_morph_enhance(img, r);
          or img_morph_enhance(img, r, s);
-         
+
      Perform noise reduction with edge preserving on image IMG.  The result is
      obtained by rescaling the values in IMG in a non-linear way between the
      local minimum and the local maximum.  Argument R defines the structuring
@@ -529,7 +528,7 @@ func img_morph_enhance(a, r, s)
       return a;
     }
   }
-  
+
   /* Compute the local minima and maxima. */
   local amin, amax;
   img_morph_lmin_lmax, a, r, amin, amax;
@@ -539,7 +538,7 @@ func img_morph_enhance(a, r, s)
     test = ((a - amin) >= (amax - a));
     return merge(amax(where(test)), amin(where(! test)), test);
   }
-  
+
   /* Remapping of values with a sigmoid. */
   test = ((amin < a)&(a < amax)); // values that need to change
   w = where(test);
@@ -562,7 +561,7 @@ func img_morph_enhance(a, r, s)
      (ALPHA,BETA) chosen to map the range [-1,1] into [0,1]. */
   alpha = 1.0/(hi - lo);
   beta = alpha*lo;
-  
+
   /* Linearly map the values in the range [-1,1] -- we already know that the
      local minimum and maximum are different. */
   a = (double(a - amin) - double(amax - a))/double(amax - amin);
@@ -660,7 +659,7 @@ extern img_segmentation_select;
 
      The expression img_segmentation_get_nrefs(sgm) yields the number of
      internal references set on the opaque image segmentation object SGM.
-     
+
      The expression img_segmentation_select(src, idx) extracts the segments of
      SRC given by the list of indices IDX and returns a new image segmentation
      object.
@@ -770,8 +769,8 @@ IMG_LINK_SOUTH =  8; /* linked with next pixel on the same column */
      approximately aligned segments with comparable sizes.  The level
      of selectivity is set via keywords described below.
 
-     
-     
+
+
      The result is an opaque object
 
      img_chain_get_number(lst) - returns the number of chains.
@@ -779,13 +778,13 @@ IMG_LINK_SOUTH =  8; /* linked with next pixel on the same column */
         in SGM of the j-th chain.
      img_chain_get_length(lst, j) - returns the length of the j-th chain of
         LST.
-        
+
      img_chain_get_coefs(lst, j) - returns the coefficents of linear transform
         to fix the distortion of the j-th chain of LST.
 
      img_chain_get_horizontal_shear(lst, j) - returns the horizontal shear
          of the j-th chain of LST.
-         
+
      img_chain_get_vertical_shear(lst, j) - returns the vertical shear
          of the j-th chain of LST.
 
@@ -807,12 +806,12 @@ IMG_LINK_SOUTH =  8; /* linked with next pixel on the same column */
      ARTOL = Alignement relative tolerance.
      PREC = Precision for the estiamtion of the shears.
      SLOPE = Maximum slope with respect to horizontal.
-     
+
      DRMIN and DRMAX are relative to ???
 
      The size tolerances are relative to the height of the bounding boxes of
      the segments.
-     
+
 
    SEE ALSO: img_segmentation_new. */
 
@@ -849,7 +848,7 @@ extern img_chainpool_new;
 extern img_chainpool_get_number;
 /* DOCUMENT img_chainpool_get_number(chn)
      Get the number of chains in chain-pool object CHN.
-     
+
    SEE ALSO: img_chainpool_new.
  */
 
@@ -859,7 +858,7 @@ extern img_chainpool_get_image_height;
          or img_chainpool_get_image_height(chn)
      Get the dimensions of the image which wasused to build the chain-pool
      object CHN.
-     
+
    SEE ALSO: img_chainpool_new.
  */
 
@@ -875,7 +874,7 @@ extern img_chainpool_get_segments;
 /* DOCUMENT img_chainpool_get_segments(chn, i);
      Get the indices of the image segments that belongs to I-th chain in
      chain-pool object CHN.
-     
+
    SEE ALSO: img_chainpool_new, img_chainpool_get_segmentation,
              img_segmentation_select.
  */
@@ -899,9 +898,16 @@ extern img_chainpool_get_length;
      Get the number of chains in chain-pool object CHN.
 
      FIXME:
-     
+
    SEE ALSO: img_chainpool_new.
  */
+
+/*---------------------------------------------------------------------------*/
+/* DETECTION */
+
+extern img_detect_spot;
+/* DOCUMENT msk = img_detect_spot(img, c0,c1,c2, t0,t1,t2);
+*/
 
 /*
  * Local Variables:

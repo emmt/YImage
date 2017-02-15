@@ -5,7 +5,7 @@
  *
  *-----------------------------------------------------------------------------
  *
- * Copyright (C) 2009 Eric Thiébaut <thiebaut@obs.univ-lyon1.fr>
+ * Copyright (C) 2009-2013 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
  *
  * This software is governed by the CeCILL-C license under French law and
  * abiding by the rules of distribution of free software.  You can use, modify
@@ -32,10 +32,6 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-C license and that you accept its terms.
  *
- *-----------------------------------------------------------------------------
- *
- * $Id$
- * $Log$
  *-----------------------------------------------------------------------------
  */
 
@@ -92,7 +88,7 @@ extern int img_morph_dilation(int type, long width, long height,
 #endif
 
 #ifdef IMG_TYPE_UINT16
- #define TYPE UINT16
+# define TYPE UINT16
 # include __FILE__
 #endif
 
@@ -148,9 +144,9 @@ extern int img_morph_dilation(int type, long width, long height,
 #endif
 */
 
-/** 
+/**
  * @brief Compute local minima and/or maxima of an image.
- * 
+ *
  * This function performs morpho-math erosion and/or morpho-math dilation of
  * an image.  The neighborhood of each pixel is defined by a structuring
  * element which is a disk of radius \a r centered at the pixel of interest.
@@ -167,7 +163,7 @@ extern int img_morph_dilation(int type, long width, long height,
  * @param lmin_pitch  The number of elements per row of \a lmin.
  * @param lmax        The address of array to store local maxima or \c NULL.
  * @param lmax_pitch  The number of elements per row of \a lmax.
- * 
+ *
  * @return \c IMG_SUCCESS or \c IMG_FAILURE.
  *
  * @see img_morph_erosion(), img_morph_dilation().
@@ -252,9 +248,9 @@ int img_morph_lmin_lmax(int type, long width, long height,
   return IMG_SUCCESS;
 }
 
-/** 
+/**
  * @brief Get the local minima of an image.
- * 
+ *
  * This function performs morpho-math erosion of an image. The result is an
  * image set with the local minima in the neighborhood of every input pixels.
  * The neighborhood is defined by the structuring element which is a disk of
@@ -270,7 +266,7 @@ int img_morph_lmin_lmax(int type, long width, long height,
  * @param ws          A workspace array of, at least, 2*R + 1 elements.
  * @param lmin        The address of array to store local minima or \c NULL.
  * @param lmin_pitch  The number of elements per row of \a lmin.
- * 
+ *
  * @return \c IMG_SUCCESS or \c IMG_FAILURE.
  *
  * @see img_morph_dilation(), img_morph_lmin_lmax().
@@ -284,9 +280,9 @@ int img_morph_erosion(int type, long width, long height,
                              r, ws, lmin, lmin_pitch, NULL, 0);
 }
 
-/** 
+/**
  * @brief Get the local maxima of an image.
- * 
+ *
  * This function performs morpho-math dialtion of an image. The result is an
  * image set with the local maxima in the neighborhood of every input pixels.
  * The neighborhood is defined by the structuring element which is a disk of
@@ -302,7 +298,7 @@ int img_morph_erosion(int type, long width, long height,
  * @param ws          A workspace array of, at least, 2*R + 1 elements.
  * @param lmax        The address of array to store local maxima or \c NULL.
  * @param lmax_pitch  The number of elements per row of \a lmax.
- * 
+ *
  * @return \c IMG_SUCCESS or \c IMG_FAILURE.
  *
  * @see img_morph_erosion(), img_morph_lmin_lmax().
@@ -331,7 +327,7 @@ static void MORPH_LMIN_LMAX(TYPE)(const long width, const long height,
   long dx, dy, dx0, dx1, dy0, dy1; /* offsets and bounds */
   long x, y; /* coordinates in source/destination image */
   long *off;
-  
+
   /*
    * Fill the offset array with the range of DX for any DY.  To lie inside the
    * neighborhood, the condition is:
