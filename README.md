@@ -1,10 +1,17 @@
 # YImage
 
-YImage is a Yorick plugin for image-like operations.  As far as possible
-Yorick arrays are interpreted as images: numerical 2D array are grayscale
-images, 3-by-WIDTH-by-HEIGHT char arrays are RGB images (of dimensions WIDTH
-and HEIGHT), and 4-by-WIDTH-by-HEIGHT char arrays are RGBA images (red, green,
-blue, alpha).
+YImage is a Yorick plugin for image-like operations.
+
+
+## Image Formats
+
+As far as possible Yorick arrays are interpreted as images: numerical 2D array
+are grayscale images, 3-by-*width*-by-*height* `char` arrays are RGB images (of
+dimensions *width* and *height*), and 4-by-*width*-by-*height* `char` arrays are
+RGBA images (red, green, blue, alpha).
+
+
+## Features
 
 This version provides:
 
@@ -34,7 +41,7 @@ This version provides:
   `img_get_version`;
 
 
-## INSTALLATION
+## Installation
 
 Installation is done in a few steps: (1) unpack the archive, (2) make a build
 directory, (3) configure for compilation, (4) build the plug-in and (5) install
@@ -56,7 +63,7 @@ source.  The `configure` script has some options which are listed with:
     configure --help
 
 
-## INSTALLATION (THE OLD WAY)
+## Installation (the old way)
 
 Unpack the archive, then update the Makefile, build the plug-in and install it
 (`$VERSION` yields the version number):
@@ -69,7 +76,7 @@ Unpack the archive, then update the Makefile, build the plug-in and install it
     make install
 
 
-## QUICK START
+## Quick start
 
 To use the plugin, just load `image.i` (all functions provided by the plugin
 are prefixed with `img_` and global constant names are prefixed with `IMG_`):
@@ -82,7 +89,7 @@ Thanks to the *autoload* feature of Yorick, if YImage has been properly
 installed, `include, "image.i"` is not necessary.
 
 
-## AUTHOR
+## Author
 
 * Éric Thiébaut (Centre de Recherche Astrophysique de Lyon, Observatoire de
   Lyon, France) <eric.thiebaut@univ-lyon1.fr>
