@@ -49,14 +49,3 @@ extern void        itempool_free_item(itempool_t *pool, void *item);
 #endif /* __cplusplus */
 
 #endif /* _ITEMPOOL_H */
-
-/*
- * Local Variables:
- * coding: utf-8
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * End:
- */

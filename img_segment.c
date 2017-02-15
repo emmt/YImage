@@ -1962,14 +1962,3 @@ static int mem_realloc(void **ptr, size_t size)
 #undef TYPE
 
 #endif /* _IMG_SEGMENT_C defined */
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * coding: utf-8
- * End:
- */

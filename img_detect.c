@@ -4,7 +4,6 @@
  * Fast spot detection algorithms.
  *
  *-----------------------------------------------------------------------------
- *-----------------------------------------------------------------------------
  *
  * Copyright (C) 2009-2017 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
  *
@@ -689,13 +688,3 @@ static long DETECT_SPOT(TYPE)(const pixel_t src[],
 #undef REAL
 
 #endif /* _IMG_DETECT_C */
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * fill-column: 78
- * coding: utf-8
- * End:
- */

@@ -1087,13 +1087,3 @@ typedef struct { uint8_t r, g, b, a; } cpt_rgba_t;
 /** @} */
 
 #endif /* _CPT_H ------------------------------------------------------------*/
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * fill-column: 78
- * coding: utf-8
- * End:
- */

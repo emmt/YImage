@@ -415,16 +415,3 @@ double COST_L2(TYPE)(const pixel_t *raw_image,
 #undef TYPE
 
 #endif /* _IMG_COST_C defined */
-
-/*---------------------------------------------------------------------------*/
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * coding: utf-8
- * End:
- */

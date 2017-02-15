@@ -44,14 +44,3 @@ extern void  memstack_clear(void **stack);
 #endif /* __cplusplus */
 
 #endif /* _MEMSTACK_H */
-
-/*
- * Local Variables:
- * coding: utf-8
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * End:
- */

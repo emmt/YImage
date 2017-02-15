@@ -256,14 +256,3 @@ static double ESTIMATE_NOISE(TYPE)(const pixel_t *img,
 #undef TYPE
 
 #endif /* _IMG_NOISE_C defined ***********************************************/
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * coding: utf-8
- * End:
- */

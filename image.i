@@ -889,14 +889,3 @@ extern img_chainpool_get_length;
 extern img_detect_spot;
 /* DOCUMENT msk = img_detect_spot(img, c0,c1,c2, t0,t1,t2);
 */
-
-/*
- * Local Variables:
- * mode: Yorick
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * coding: utf-8
- * End:
- */

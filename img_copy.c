@@ -5,8 +5,6 @@
  *
  *-----------------------------------------------------------------------------
  *
- *-----------------------------------------------------------------------------
- *
  * Copyright (C) 2009-2017 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
  *
  * This file is part of YImage.
@@ -539,14 +537,3 @@ static void COPY(SRC,DST)(const long  width, const long  height,
 #undef DST
 
 #endif /* _IMG_COPY_C ********************************************************/
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * coding: utf-8
- * End:
- */

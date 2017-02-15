@@ -396,14 +396,3 @@ extern int img_detect_spot(const void* src, const int type,
 #endif
 
 #endif /* _IMG_H */
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * coding: utf-8
- * End:
- */

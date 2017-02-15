@@ -1524,14 +1524,3 @@ static int get_binop_type(int left_type, int right_type)
   }
   return binop_type_table[left_type][right_type];
 }
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * coding: utf-8
- * End:
- */

@@ -150,14 +150,3 @@ HEAPSORT_SCOPE void HEAPSORT_FUNCTION(HEAPSORT_OBJ_TYPE obj[], size_t n)
 #undef  HEAPSORT_FUNCTION
 #undef  HEAPSORT_SCOPE
 #undef  HEAPSORT_GET_KEY
-
-/*
- * Local Variables:
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * coding: utf-8
- * End:
- */

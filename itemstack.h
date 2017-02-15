@@ -67,14 +67,3 @@ extern void         itemstack_dump(const itemstack_t *stack, long n,
 #endif /* __cplusplus */
 
 #endif /* _ITEMSTACK_H */
-
-/*
- * Local Variables:
- * coding: utf-8
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * End:
- */

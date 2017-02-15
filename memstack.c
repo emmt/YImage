@@ -175,14 +175,3 @@ void memstack_clear(void **stack)
     }
   }
 }
-
-/*
- * Local Variables:
- * coding: utf-8
- * mode: C
- * tab-width: 8
- * c-basic-offset: 2
- * indent-tabs-mode: nil
- * fill-column: 78
- * End:
- */
