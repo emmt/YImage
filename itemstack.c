@@ -5,41 +5,22 @@
  *
  *-----------------------------------------------------------------------------
  *
- * Copyright (C) 2009 Eric Thiébaut <thiebaut@obs.univ-lyon1.fr>
+ * Copyright (C) 2009-2017 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
  *
- * This software is governed by the CeCILL-C license under French law and
- * abiding by the rules of distribution of free software.  You can use, modify
- * and/ or redistribute the software under the terms of the CeCILL-C license
- * as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
+ * This file is part of YImage.
  *
- * As a counterpart to the access to the source code and rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty and the software's author, the holder of the
- * economic rights, and the successive licensors have only limited liability.
+ * YImage is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * In this respect, the user's attention is drawn to the risks associated with
- * loading, using, modifying and/or developing or reproducing the software by
- * the user in light of its specific status of free software, that may mean
- * that it is complicated to manipulate, and that also therefore means that it
- * is reserved for developers and experienced professionals having in-depth
- * computer knowledge. Users are therefore encouraged to load and test the
- * software's suitability as regards their requirements in conditions enabling
- * the security of their systems and/or data to be ensured and, more
- * generally, to use and operate it in the same conditions as regards
- * security.
+ * YImage is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
  *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL-C license and that you accept its terms.
- *
- *-----------------------------------------------------------------------------
- *
- * $Id: itemstack.c,v 1.1 2009/12/10 08:53:02 eric Exp $
- * $Log: itemstack.c,v $
- * Revision 1.1  2009/12/10 08:53:02  eric
- * Initial revision
- *
- *-----------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License along with
+ * YImage.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <errno.h>
@@ -64,7 +45,7 @@ struct _itemstack_stack {
 #define MAX(a, b)                    ((a) >= (b) ? (a) : (b))
 #define MIN(a, b)                    ((a) <= (b) ? (a) : (b))
 
-/** 
+/**
  * @brief Creates a new item stack.
  *
  * @param size The initial stack size.  To avoid realloc(), \a size should be
@@ -90,9 +71,9 @@ itemstack_t *itemstack_new(long size)
   return stack;
 }
 
-/** 
+/**
  * @brief Destroy an item stack.
- * 
+ *
  * This function frees all the items of the stack (according to their
  * "destroy" method) and then frees the memory used by the stack.
  *
@@ -114,11 +95,11 @@ void itemstack_destroy(itemstack_t *stack)
   }
 }
 
-/** 
+/**
  * @brief Query the number of items stored in a stack.
- * 
+ *
  * @param stack The address of the item stack.
- * 
+ *
  * @return The number of items stored in a stack.  In case of error, \c 0 is
  *         returned and \c errno is set.
  */
@@ -131,14 +112,14 @@ long itemstack_get_number(const itemstack_t *stack)
   return stack->count;
 }
 
-/** 
+/**
  * @brief Query the size of a stack.
- * 
+ *
  * This function yields the maximum number of items that can be stored by
  * \a stack prior to re-allocating the internal buffer of the stack.
  *
  * @param stack The address of the item stack.
- * 
+ *
  * @return The size of a stack.  In case of error, \c 0 is returned and
  *         \c errno is set.
  */
@@ -151,14 +132,14 @@ long itemstack_get_size(const itemstack_t *stack)
   return stack->size;
 }
 
-/** 
+/**
  * @brief Push an item on top of an item stack.
- * 
+ *
  * @param stack   The address of the item stack.
  * @param data    The item address or client data.
  * @param destroy The function to delete the item (can be \c NULL to
  *                do nothing).
- * 
+ *
  * @return \c ITEMSTACK_SUCCESS on success or \c ITEMSTACK_FAILURE if there is
  *         not enough memory or if \a stack is invalid.
  */
@@ -197,9 +178,9 @@ int itemstack_push(itemstack_t *stack, void *data, void (*destroy)(void *))
   return ITEMSTACK_SUCCESS;
 }
 
-/** 
+/**
  * @brief Allocate and push a new piece of dynamic memory on top of a stack.
- * 
+ *
  * This function allocates and push a new piece of dynamic memory on top of
  * \a stack.  Do not use the standard free() function to release the memory
  * but itemstack_drop() or itemstack_destroy().
@@ -207,7 +188,7 @@ int itemstack_push(itemstack_t *stack, void *data, void (*destroy)(void *))
  * @param stack   The address of the item stack.
  * @param nbytes  The number of bytes to allocate, must be at least one.
  * @param clear   Non-zeor to clear the allocated memory (fill it with zeroes).
- * 
+ *
  * @return The address of a buffer with \a size bytes, or \c NULL in case of
  *         error (invalid argument(s) or insufficient memory and \c errno set
  *         accordingly).
@@ -236,9 +217,9 @@ void *itemstack_push_dynamic(itemstack_t *stack, size_t nbytes, int clear)
   return ptr;
 }
 
-/** 
+/**
  * @brief Drop the topmost element(s) of an item stack.
- * 
+ *
  * This function frees the last item(s) that has been pushed on a stack.  The
  * "destroy" method of the items are used if non-\c NULL.
  *
@@ -266,7 +247,7 @@ void itemstack_drop(itemstack_t *stack, long n)
   }
 }
 
-/** 
+/**
  * @brief Steal the topmost item from the stack.
  *
  * This function steals the topmost item stored in \a stack.  The retrieved
@@ -277,7 +258,7 @@ void itemstack_drop(itemstack_t *stack, long n)
  * @param stack The address of the item stack.
  * @param item  The address where to store the contents of the topmost item
  *              of \a stack.
- * 
+ *
  * @return A standard result: \c ITEMSTACK_SUCCESS or \c ITEMSTACK_FAILURE
  *         (with \c errno set to \c EFAULT if one of the addresses is invalid,
  *         or to \c EINVAL if the stack is empty; in this latter case,
@@ -305,7 +286,7 @@ int itemstack_pop(itemstack_t *stack, itemstack_item_t *item)
   return ITEMSTACK_SUCCESS;
 }
 
-/** 
+/**
  * @brief Get an item from the stack for examination.
  *
  * This function retrieves an item stored in \a stack.  The index \a j is
@@ -319,7 +300,7 @@ int itemstack_pop(itemstack_t *stack, itemstack_item_t *item)
  * @param j     The index of the item relative to the top of the stack.
  * @param item  The address where to store the contents of the \a j-th item
  *              from the top of \a stack.
- * 
+ *
  * @return A standard result: \c ITEMSTACK_SUCCESS or \c ITEMSTACK_FAILURE
  *         (with \c errno set to \c EFAULT if one of the addresses is invalid,
  *         or to \c EINVAL if the index is out of range; in this latter case,
@@ -351,9 +332,9 @@ int itemstack_peek(const itemstack_t *stack, long j,
   return ITEMSTACK_SUCCESS;
 }
 
-/** 
+/**
  * @brief Swap two items of a stack.
- * 
+ *
  * This function exchanges the \a j1-th item and the \a j2-th item of
  * \a stack.  Indices are relative to the top of the stack: 0 is the
  * topmost item, 1 is the previous one, etc.
@@ -406,9 +387,9 @@ int itemstack_swap(itemstack_t *stack, long j1, long j2)
   return ITEMSTACK_SUCCESS;
 }
 
-/** 
+/**
  * @brief Printout the top part of an item stack.
- * 
+ *
  * @param stack   The address of the item stack.
  * @param n       The number of items to dump.
  * @param file    The output stream.

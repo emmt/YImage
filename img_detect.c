@@ -4,35 +4,24 @@
  * Fast spot detection algorithms.
  *
  *-----------------------------------------------------------------------------
- *
- * Copyright (C) 2011-2013 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
- *
- * This software is governed by the CeCILL-C license under French law and
- * abiding by the rules of distribution of free software.  You can use, modify
- * and/or redistribute the software under the terms of the CeCILL-C license as
- * circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty and the software's author, the holder of the
- * economic rights, and the successive licensors have only limited liability.
- *
- * In this respect, the user's attention is drawn to the risks associated with
- * loading, using, modifying and/or developing or reproducing the software by
- * the user in light of its specific status of free software, that may mean
- * that it is complicated to manipulate, and that also therefore means that it
- * is reserved for developers and experienced professionals having in-depth
- * computer knowledge. Users are therefore encouraged to load and test the
- * software's suitability as regards their requirements in conditions enabling
- * the security of their systems and/or data to be ensured and, more
- * generally, to use and operate it in the same conditions as regards
- * security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL-C license and that you accept its terms.
- *
  *-----------------------------------------------------------------------------
+ *
+ * Copyright (C) 2009-2017 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
+ *
+ * This file is part of YImage.
+ *
+ * YImage is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * YImage is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * YImage.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _IMG_DETECT_C
@@ -171,7 +160,7 @@
  * :       |           |           |           |           |
  * :       +-----------+-----------+-----------+-----------+
  * :       |           |           |           |
- * :   y-1 |  I0(x-1)  |   I0(x)   |  I0(x+1)  |            
+ * :   y-1 |  I0(x-1)  |   I0(x)   |  I0(x+1)  |
  * :       |           |           |           |
  * :       +-----------+-----------+-----------+
  * :            x-1          x          x+1          x+2
@@ -180,7 +169,7 @@
  * image:
  *
  * :   I0(x) = I(x,y-1)              F0(x) = F(x,y-1)
- * :   I1(x) = I(x,y)                F1(x) = F(x,y)  
+ * :   I1(x) = I(x,y)                F1(x) = F(x,y)
  * :   I2(x) = I(x,y+1)              F2(x) = F(x,y+1)
  * :   I3(x) = I(x,y+2)
  *
@@ -239,7 +228,7 @@
  *
  * Once the new filtered value F2(x+1) = F(x+1,y+1) has been computed, the
  * updating of these variables and the detection test write:
- *   
+ *
  * : m1 = m2
  * : m2 = m3
  * : m3 = max{F1(x+2), F3(x+2)}
@@ -247,7 +236,7 @@
  * : m5 = m6
  * : m6 = F2(x+2)
  * : q1 = max{m2, m4, m6}
- * : q2 = max{m1, m3} 
+ * : q2 = max{m1, m3}
  * : m5 > max{t0, q1 + t1, q2 + t2}
  *
  *
@@ -365,7 +354,7 @@
 #define FILTER_ROW_TOP(f,i0,i1,i2) FILTER_ROW(f,i0,i1,i2, 7,8,9)
 
 /* FIXME: __x < __last ===>  __x <= xmax */
- 
+
 /* Macro to apply bias and gain correction to a whole row of pixels. */
 #define LOAD_ROW(i) do {                        \
     index_t __x;                                \
@@ -457,7 +446,7 @@
 # include __FILE__
 #endif
 
-int img_detect_spot(const void* src, const int type, 
+int img_detect_spot(const void* src, const int type,
                     const int width, const long height,
                     const double c0, const double c1, const double c2,
                     const double t0, const double t1, const double t2,
@@ -585,7 +574,7 @@ static long DETECT_SPOT(TYPE)(const pixel_t src[],
   if (width < 3 || height < 3) {
     return count;
   }
-  
+
   /* Coordinates of first/last pixel where a spot can be detected. */
 #undef xmin
 #define xmin 1
@@ -611,7 +600,7 @@ static long DETECT_SPOT(TYPE)(const pixel_t src[],
     memset(&dst[y*width], 0, width*sizeof(dst[0]));
   }
 #endif
-  
+
   for (y = ymin; y <= ymax; ++y) {
     /* Permute the rows of the image and of the filtered image. */
     PUSH4(img0, img1, img2, img3, img3 + width);
@@ -642,7 +631,7 @@ static long DETECT_SPOT(TYPE)(const pixel_t src[],
 #ifndef CLEAR_RESULT_FIRST
     memset(&dst[y*width], 0, width*sizeof(dst[0]));
 #endif
-  
+
     /* Loop over all allowed columns. */
     for (x = xmin; x <= xmax; ++x) {
       /* Compute image value at pixel (x+2,y+2) and update partial sums.  We

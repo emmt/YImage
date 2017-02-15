@@ -5,41 +5,22 @@
  *
  *-----------------------------------------------------------------------------
  *
- * Copyright (C) 2009 Eric Thiébaut <thiebaut@obs.univ-lyon1.fr>
+ * Copyright (C) 2009-2017 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
  *
- * This software is governed by the CeCILL-C license under French law and
- * abiding by the rules of distribution of free software.  You can use, modify
- * and/ or redistribute the software under the terms of the CeCILL-C license
- * as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
+ * This file is part of YImage.
  *
- * As a counterpart to the access to the source code and rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty and the software's author, the holder of the
- * economic rights, and the successive licensors have only limited liability.
+ * YImage is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * In this respect, the user's attention is drawn to the risks associated with
- * loading, using, modifying and/or developing or reproducing the software by
- * the user in light of its specific status of free software, that may mean
- * that it is complicated to manipulate, and that also therefore means that it
- * is reserved for developers and experienced professionals having in-depth
- * computer knowledge. Users are therefore encouraged to load and test the
- * software's suitability as regards their requirements in conditions enabling
- * the security of their systems and/or data to be ensured and, more
- * generally, to use and operate it in the same conditions as regards
- * security.
+ * YImage is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
  *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL-C license and that you accept its terms.
- *
- *-----------------------------------------------------------------------------
- *
- * $Id: memstack.c,v 1.1 2009/12/10 08:54:35 eric Exp $
- * $Log: memstack.c,v $
- * Revision 1.1  2009/12/10 08:54:35  eric
- * Initial revision
- *
- *-----------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License along with
+ * YImage.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <errno.h>
@@ -59,7 +40,7 @@ static const size_t ALIGN = MAX(sizeof(double), sizeof(void *));
 
 #define STACK_MAGIC 0xDEADC0DE
 
-/** 
+/**
  * @brief Initialize a memory stack.
  *
  * This function set the value pointed by \a stack to be \c NULL.
@@ -73,16 +54,16 @@ void memstack_init(void **stack)
   }
 }
 
-/** 
+/**
  * @brief Allocate a new fragment of memory in a stack.
- * 
+ *
  * This function push a new fragment of memory on a stack.  Do not use the
  * standard \c free() function to release the memory but \c memstack_drop() or
  * \c memstack_destroy().
  *
  * @param stack   The address of a persistent pointer to store the stack.
  * @param size    The number of bytes to allocate.
- * 
+ *
  * @return The address of a buffer with \a size bytes, or \c NULL in case of
  *         error (invalid argument(s) or insufficient memory and \c errno set
  *         accordingly).
@@ -114,16 +95,16 @@ void *memstack_push(void **stack, size_t size)
   return ADDRESS(ptr, offset);
 }
 
-/** 
+/**
  * @brief Allocate a new fragment of memory in a stack and fill it with zeroes.
- * 
+ *
  * This function push a new fragment of memory on a stack and fill it with
  * zeroes.  Do not use the standard \c free() function to release the memory
  * but \c memstack_drop() or \c memstack_destroy().
  *
  * @param stack   The address of a persistent pointer to store the stack.
  * @param size    The number of bytes to allocate.
- * 
+ *
  * @return The address of a buffer with \a size bytes, or \c NULL in case of
  *         error (invalid argument(s) or insufficient memory and \c errno set
  *         accordingly).
@@ -141,9 +122,9 @@ void *memstack_push_zero(void **stack, size_t size)
   return ptr;
 }
 
-/** 
+/**
  * @brief Drop the topmost element of a memory stack.
- * 
+ *
  * This function frees the last fragment of memory that has been pushed on a
  * stack.
  *
@@ -168,12 +149,12 @@ void memstack_drop(void **stack)
   }
 }
 
-/** 
+/**
  * @brief Free all memory allocated on a stack.
  *
  * This function frees all the fragment of memory that have been pushed on a
  * stack.
- * 
+ *
  * @param stack   The address of a persistent pointer to store the stack.
  */
 void memstack_clear(void **stack)

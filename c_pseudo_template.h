@@ -5,48 +5,22 @@
  *
  *-----------------------------------------------------------------------------
  *
- * Copyright (C) 2009 Eric Thiébaut <thiebaut@obs.univ-lyon1.fr>
+ * Copyright (C) 2009-2017 Éric Thiébaut <eric.thiebaut@univ-lyon1.fr>
  *
- * This software is governed by the CeCILL-C license under French law and
- * abiding by the rules of distribution of free software.  You can use, modify
- * and/ or redistribute the software under the terms of the CeCILL-C license
- * as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
+ * This file is part of YImage.
  *
- * As a counterpart to the access to the source code and rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty and the software's author, the holder of the
- * economic rights, and the successive licensors have only limited liability.
+ * YImage is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * In this respect, the user's attention is drawn to the risks associated with
- * loading, using, modifying and/or developing or reproducing the software by
- * the user in light of its specific status of free software, that may mean
- * that it is complicated to manipulate, and that also therefore means that it
- * is reserved for developers and experienced professionals having in-depth
- * computer knowledge. Users are therefore encouraged to load and test the
- * software's suitability as regards their requirements in conditions enabling
- * the security of their systems and/or data to be ensured and, more
- * generally, to use and operate it in the same conditions as regards
- * security.
+ * YImage is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
  *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL-C license and that you accept its terms.
- *
- *-----------------------------------------------------------------------------
- *
- * $Id: c_pseudo_template.h,v 1.3 2009/12/10 08:57:50 eric Exp $
- * $Log: c_pseudo_template.h,v $
- * Revision 1.3  2009/12/10 08:57:50  eric
- *  - New macros for min/max values.
- *
- * Revision 1.2  2009/11/23 16:24:24  eric
- *  - Some minor bugs fixed.
- *  - New types for color images: RGB and RGBA.
- *
- * Revision 1.1  2009/11/15 07:39:54  eric
- * Initial revision
- *
- *-----------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License along with
+ * YImage.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _CPT_H
@@ -56,7 +30,7 @@
 #include <limits.h>
 #include <float.h>
 
-/** 
+/**
  * @author Eric Thiébaut <thiebaut\@obs.univ-lyon1.fr>
  * @date   Wed Mar 25 15:28:39 2009
  */
@@ -774,7 +748,7 @@ typedef struct { uint8_t r, g, b, a; } cpt_rgba_t;
 
 /*---------------------------------------------------------------------------*/
 
-/** 
+/**
  * @brief Expand known type identifier into internal suffix.
  *
  * Expand known (see CPT_TYPE) type identifier to unique internal suffix.
@@ -1002,9 +976,9 @@ typedef struct { uint8_t r, g, b, a; } cpt_rgba_t;
 
 #ifndef DOXYGEN
 
-#define CPT_UINT8_MAX     255 
-#define CPT_INT8_MIN    (-128) 
-#define CPT_INT8_MAX      127 
+#define CPT_UINT8_MAX     255
+#define CPT_INT8_MIN    (-128)
+#define CPT_INT8_MAX      127
 #define CPT_INT16_MIN	(-32768)
 #define CPT_INT16_MAX	  32767
 #define CPT_UINT16_MAX	  65535U
