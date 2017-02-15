@@ -38,15 +38,41 @@ This version provides:
 INSTALLATION
 ============
 
-Unpack the archive, then update the Makefile, build the plug-in and install it
-(VERSION stores the version number):
+Installation is done in a few steps: (1) unpack the archive, (2) make a build
+directory, (3) configure for compilation, (4) build the plug-in and (5) install
+it:
 
-   tar jxvf YImage-$VERSION.tar.bz2
-   cd YImage-$VERSION
-   yorick -batch make.i
-   make clean
-   make
-   make install
+    tar jxvf YImage-$VERSION.tar.bz2
+    mkdir -p $BUILD
+    cd $BUILD
+    $SRCDIR/configure
+    make clean
+    make
+    make install
+
+where `$VERSION` yields the version number, `$BUILD` yields the build directory
+and `$SRCDIR` yields the top directory where are the plugin sources.  The build
+directory can be anywhere, including inside the directory tree of the plugin
+source.  The `configure` script has some options which are listed with:
+
+    configure --help
+
+
+INSTALLATION (THE OLD WAY)
+==========================
+
+Unpack the archive, then update the Makefile, build the plug-in and install it
+(`$VERSION` yields the version number):
+
+    tar jxvf YImage-$VERSION.tar.bz2
+    cd YImage-$VERSION
+    yorick -batch make.i
+    make clean
+    make
+    make install
+
+QUICK START
+===========
 
 To use the plugin, just load "image.i" (all functions provided by the plugin
 are prefixed with "img_" and global constant names are prefixed with "IMG_"):
