@@ -78,6 +78,9 @@ are prefixed with `img_` and global constant names are prefixed with `IMG_`):
     > include, "image.i";
     > help, img_get_width
 
+Thanks to the *autoload* feature of Yorick, if YImage has been properly
+installed, `include, "image.i"` is not necessary.
+
 
 ## AUTHOR
 

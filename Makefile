@@ -51,13 +51,13 @@ EXTRA_PKGS=$(Y_EXE_PKGS)
 PKG_CLEAN=img_version.h fnlist
 
 # autoload file for this package, if any
-PKG_I_START=
+PKG_I_START=$(srcdir)/image-start.i
 # non-pkg.i include files for this package, if any
 PKG_I_EXTRA=
 
 RELEASE_FILES = \
   AUTHORS LICENSE NEWS README TODO \
-  Makefile image.i \
+  Makefile image.i image-start.i \
   c_pseudo_template.h heapsort.h img.h \
   img_copy.c img_cost.c  img_detect.c img_linear.c img_morph.c \
   img_noise.c img_segment.c img_yorick.c \
