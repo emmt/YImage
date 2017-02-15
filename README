@@ -71,6 +71,7 @@ Unpack the archive, then update the Makefile, build the plug-in and install it
     make
     make install
 
+
 QUICK START
 ===========
 
@@ -85,5 +86,5 @@ are prefixed with "img_" and global constant names are prefixed with "IMG_"):
 AUTHOR
 ======
 
-Eric Thiébaut (Observatoire de Lyon, France)
-<thiebaut@obs.univ-lyon1.fr>
+* Éric Thiébaut (Centre de Recherche Astrophysique de Lyon, Observatoire de
+  Lyon, France) <eric.thiebaut@univ-lyon1.fr>
