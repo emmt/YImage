@@ -56,8 +56,8 @@ PKG_I_START=$(srcdir)/image-start.i
 PKG_I_EXTRA=
 
 RELEASE_FILES = \
-  AUTHORS LICENSE NEWS README TODO \
-  Makefile image.i image-start.i \
+  AUTHORS.md LICENSE.md NEWS.md README.md TODO.md \
+  Makefile configure image.i image-start.i \
   c_pseudo_template.h heapsort.h img.h \
   img_copy.c img_cost.c  img_detect.c img_linear.c img_morph.c \
   img_noise.c img_segment.c img_yorick.c \
