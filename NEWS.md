@@ -1,3 +1,5 @@
+* Add watershed segmentation.
+
 ## Release 1.0.0 (15 Feb. 2017)
 
 * Autoloadable plugin.

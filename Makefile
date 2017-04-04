@@ -30,7 +30,7 @@ PKG_I=$(srcdir)/image.i
 #     ocr_cost.o itempool.o itemstack.o yanpr.o
 OBJS = img_copy.o img_cost.o img_linear.o img_morph.o img_noise.o \
        img_segment.o img_yorick.o img_detect.o \
-       itempool.o itemstack.o
+       itempool.o itemstack.o watershed.o
 INCS = $(srcdir)/img.h $(srcdir)/c_pseudo_template.h
 
 # change to give the executable a name other than yorick
@@ -60,7 +60,7 @@ RELEASE_FILES = \
   Makefile configure image.i image-start.i \
   c_pseudo_template.h heapsort.h img.h \
   img_copy.c img_cost.c  img_detect.c img_linear.c img_morph.c \
-  img_noise.c img_segment.c img_yorick.c \
+  img_noise.c img_segment.c img_yorick.c watershed.c \
   itempool.c itempool.h \
   itemstack.c itemstack.h \
   memstack.c memstack.h
@@ -115,6 +115,7 @@ img_copy.o: $(INCS)
 img_cost.o: $(INCS)
 img_utils.o: $(INCS)
 img_yorick.o: $(INCS) img_version.h
+watershed.o: $(srcdir)/watershed.c
 img_version.h: $(srcdir)/VERSION
 	sed -re 's/^([0-9]+)\.([0-9]+)\.([0-9]+).*/#define IMG_VERSION_MAJOR \1\n#define IMG_VERSION_MINOR \2\n#define IMG_VERSION_PATCH \3\n/' <"$<" >"$@"
 

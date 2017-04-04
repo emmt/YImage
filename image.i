@@ -1,4 +1,5 @@
-/* image.i --
+/*
+ * image.i --
  *
  * Yorick plugin for image processing.
  *
@@ -613,6 +614,35 @@ func img_morph_trilevel(a, r, cmin=, white=, black=)
 /*---------------------------------------------------------------------------*/
 /* SEGMENTATION */
 
+extern img_watershed;
+/* DOCUMENT img_watershed, lab, arr;
+         or img_watershed(lab, arr);
+
+     Performs watershed segmentation of 2D array ARR updating the labels in
+     LAB.
+
+     The array of labels LAB must be of type long and have the same
+     dimensions as ARR.  On entry, LAB must be initialized as follows:
+
+         LAB(i) < 0   to ignore point i;
+         LAB(i) = 0   to update the label of point i by the watershing
+                      algorithm;
+         LAB(i) > 0   to seed the labelling of basins.
+
+     On return, the zero values in LAB are updated as follows:
+
+         LAB(i) = -1  if point i is a crest point;
+         LAB(i) > 0   if point i has reached the basin initially labelled
+                      with the value LAB(i).
+
+     When called as a function, the contents of LAB is left unchanged and
+     an array with the new labels is returned.  When called as a
+     subroutine, the operation is performed in-place (i.e. the contents of
+     LAB are updated).
+
+   SEE ALSO: img_segmentation_new.
+ */
+
 extern img_segmentation_new;
 extern img_segmentation_get_number;
 extern img_segmentation_get_nrefs;
@@ -690,7 +720,7 @@ extern img_segmentation_get_height;
        height = ymax - ymin + 1;
 
 
-   SEE ALSO: img_segmentation_new, img_segmentation_get_x. */
+   SEE ALSO: img_watershed, img_segmentation_new, img_segmentation_get_x. */
 
 
 local IMG_LINK_EAST, IMG_LINK_WEST, IMG_LINK_NORTH, IMG_LINK_SOUTH;
