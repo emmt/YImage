@@ -18,17 +18,17 @@ This version provides:
 - basic image management: `is_image`, `img_is_complex`, `img_is_color`,
   `img_is_rgb`, `img_is_rgba`, `img_get_height`, `img_get_width`,
   `img_get_type`, `img_get_red`, `img_get_green`, `img_get_blue`,
-  `img_get_alpha`, `img_get_channel`;
+  `img_get_alpha` and `img_get_channel`;
 
 - linear geometrical transform of an image: `img_extract_rectangle`,
   `img_rotate`;
 
 - morpho-math operations: `img_morph_black_top_hat`, `img_morph_closing`,
   `img_morph_dilation`, `img_morph_enhance`, `img_morph_erosion`,
-  `img_morph_lmin_lmax`, `img_morph_opening`, `img_morph_trilevel`,
+  `img_morph_lmin_lmax`, `img_morph_opening`, `img_morph_trilevel` and
   `img_morph_white_top_hat`;
 
-- image segmentation: see `img_segmentation_new`;
+- image segmentation: see `img_watershed` and `img_segmentation_new`;
 
 - functions to manage pools of chains of image segments: see
   `img_chainpool_new`;
@@ -37,7 +37,7 @@ This version provides:
 
 - estimate the noise level in an image: see `img_estimate_noise`;
 
-- miscellaneous functions: `img_define_constant`, `img_get_symbol`,
+- miscellaneous functions: `img_define_constant`, `img_get_symbol` and
   `img_get_version`;
 
 
