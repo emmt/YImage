@@ -116,8 +116,11 @@ img_cost.o: $(INCS)
 img_utils.o: $(INCS)
 img_yorick.o: $(INCS) img_version.h
 watershed.o: $(srcdir)/watershed.c
-img_version.h: $(srcdir)/VERSION
-	sed -Ee 's/^([0-9]+)\.([0-9]+)\.([0-9]+).*/#define IMG_VERSION_MAJOR \1\n#define IMG_VERSION_MINOR \2\n#define IMG_VERSION_PATCH \3\n/' <"$<" >"$@"
+img_version.h: $(srcdir)/VERSION Makefile
+	rm -f "$@"
+	sed -e 's/^ *\([^. ]*\).*/#define IMG_VERSION_MAJOR \1/' <"$<" >>"$@"
+	sed -e 's/^[^.]*\.\([^. ]*\).*/#define IMG_VERSION_MINOR \1/' <"$<" >>"$@"
+	sed -e 's/^[^.]*\.[^.]*\.\([^. ]*\).*/#define IMG_VERSION_PATCH \1/' <"$<" >>"$@"
 
 fnlist: image.i Makefile
 	grep -E '^[ 	]*(extern|func)[ 	]' "$<" | sed -re \
